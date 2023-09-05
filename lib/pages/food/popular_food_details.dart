@@ -4,10 +4,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:food_oders/controllers/cart_controller.dart';
 import 'package:food_oders/controllers/popular_product_controller.dart';
+import 'package:food_oders/pages/cart/cart_page.dart';
 import 'package:food_oders/utils/app_contants.dart';
 import 'package:get/get.dart';
-
 import 'package:food_oders/pages/home/main_food_page.dart';
 import 'package:food_oders/routes/route_helper.dart';
 import 'package:food_oders/utils/dimensions.dart';
@@ -30,6 +31,8 @@ class PopularFoodDetail extends StatelessWidget {
     //we use the passed value to have access to our data that is the list in the product controller
     var product = Get.find<PopularProductController>().popularProductList[pageId];
     log("name is = " +product.name.toString());
+    //initialise the quantity to be zero
+    Get.find<PopularProductController>().initQuantity(product,Get.find<CartController>());
 
     return Scaffold(
       body:Stack( //a Stack takes up Children since they are 2 or more
@@ -64,7 +67,41 @@ class PopularFoodDetail extends StatelessWidget {
               },
               child: AppIcon(icon: Icons.arrow_back_ios,),
               ),
-            AppIcon(icon: Icons.shopping_cart_checkout_outlined,),
+            //cart icon that shows data instantly upon change this is thru state management
+            //this state management is facilitated by the getX thru the GetBuilder and the builder uses the controller that will be giving data
+            GetBuilder<PopularProductController>(builder: (controller){
+              return GestureDetector(
+                  onTap: () {
+                    Get.to(()=>CartPage());
+                  },
+                child: Stack(
+                  children:[
+                   AppIcon(icon: Icons.shopping_cart_checkout_outlined,),
+                   //to call the contoller we use Get.find , its different  from how we access models or classes
+                   Get.find<PopularProductController>().totalItems>1 
+                   ?  Positioned(right: 0, top: 0,
+                    child: GestureDetector(
+                        onTap: () {
+                          Get.to(()=>CartPage());
+                        },
+                        child: AppIcon(
+                          icon: Icons.circle,
+                          backgroundColor: Colors.black,
+                          size: 20,
+                          iconColor: Colors.transparent,
+                        ),
+                      ),
+                    )
+                   :  Container(),
+                   Get.find<PopularProductController>().totalItems>=1
+                   ?  Positioned(right: 3, top: 3,
+                      child: BigText(text: Get.find<PopularProductController>().totalItems.toString(),size: 12, color: Colors.white, ),
+                    )
+                  : Container(),
+                  ]
+                ),
+              );
+            })
            ],
           ),
           ),
@@ -88,7 +125,7 @@ class PopularFoodDetail extends StatelessWidget {
             children: [
               AppColumn(text:product.name.toString()),
               SizedBox(height: Dimensions.height20,),
-              BigText(text: "Introduce"),
+              BigText(text: "Food Description"),
               SizedBox(height: Dimensions.height20,),
               Expanded(
                 child: SingleChildScrollView(
@@ -104,7 +141,8 @@ class PopularFoodDetail extends StatelessWidget {
         ],
       ),
         //use the BottomNavigationBar for Add & Dedact from Cart count
-      bottomNavigationBar: Container(
+      bottomNavigationBar:GetBuilder<PopularProductController>(builder: (popularProduct) {
+        return  Container(
         height: Dimensions.bottomHeightBar,
         padding: EdgeInsets.only(
           top: Dimensions.height20,
@@ -121,6 +159,7 @@ class PopularFoodDetail extends StatelessWidget {
           ),
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+
               Container(
                 padding: EdgeInsets.only(
                   top: Dimensions.height20,
@@ -132,17 +171,33 @@ class PopularFoodDetail extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(Dimensions.radius20),
                 ) ,
+                // this is the left counter
                child: Row(
                 children: [
-                  Icon(Icons.remove, color: Colors.black26,),
+                  GestureDetector(
+                    onTap: () {
+                      popularProduct.setQuantity(false);
+                    },
+                    child: Icon(Icons.remove, color: Colors.black26,),
+                    ),
                   SizedBox(width: (Dimensions.width10),),
-                  BigText(text: "0"),
+                  BigText(text: popularProduct.inCartItems.toString()),
                   SizedBox(width: (Dimensions.width10),),
-                  Icon(Icons.add, color: Colors.black26,),
+                  GestureDetector(
+                    onTap: (){
+                      popularProduct.setQuantity(true);
+                    },
+                    child: Icon(Icons.add, color: Colors.black26,),
+                    ),
                 ],
                ),
               ),
-              Container(
+              //botomNavigationBar for Cart
+            GestureDetector(
+              onTap: () {
+              popularProduct.addItem(product);
+              },
+             child: Container(
                 padding: EdgeInsets.only(
                   top: Dimensions.height20,
                   bottom: Dimensions.height20,
@@ -153,11 +208,15 @@ class PopularFoodDetail extends StatelessWidget {
                   color: Colors.green[200],
                   borderRadius: BorderRadius.circular(Dimensions.radius20),
                 ) ,
-                child: BigText(text: "\$12.85c | Add to Cart",color: Colors.deepPurpleAccent,),
+                
+                  child: BigText(text: "\$ ${product.price!} | Add to Cart",color: Colors.deepPurpleAccent,),
+                  
+              ),
               ),
             ],
           ),
-      ),
+      );
+      },)
     );
   }
 }

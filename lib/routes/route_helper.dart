@@ -11,7 +11,7 @@ class RouteHelper{
   //i can use a function so that later i can use parameters
   static String getInitial()=>'$initial';
   static String getPopularFood(int pageId)=>'$popularFood?pageId=$pageId';
-  static String getRecommendedFood()=>'$recommendedFood';
+  static String getRecommendedFood(int pageID)=>'$recommendedFood?pageID=$pageID';
 
 //GetMaterialApp makes the use of the a list of pages called GetPage
  static List<GetPage> routes =[
@@ -20,7 +20,9 @@ class RouteHelper{
     //we shld pass the index which is our pageId so we get that variable by Get.parameter['pageId']
      var pageId = Get.parameters['pageId'];
    return PopularFoodDetail(pageId: int.parse(pageId!));}, transition: Transition.fadeIn,),
-  GetPage(name: recommendedFood, page:()=>RecommendedFoodDetail(), transition: Transition.fadeIn,),
+  GetPage(name: recommendedFood, page:(){
+   var pageID = Get.parameters['pageID'];
+   return RecommendedFoodDetail(pageID: int.parse(pageID!) );}, transition: Transition.fadeIn,),
  ];
 
 }

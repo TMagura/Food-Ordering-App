@@ -106,6 +106,8 @@ class _FoodPageBodyState extends State<FoodPageBody> {
 
        ),
        //list of food and images in a listView.Builder: Recommended food
+       //GetBuilder is used to get the instace of a controller and be able to use its functions
+       //so you wrap the part which will need the instance
         GetBuilder<RecommendedProductController>(builder: (recommendedProduct){
           return recommendedProduct.isLoaded 
           ? Container( 
@@ -116,7 +118,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
             itemBuilder: ((context, index) {
               return GestureDetector(
                 onTap: (){
-                  Get.toNamed(RouteHelper.getRecommendedFood());
+                  Get.toNamed(RouteHelper.getRecommendedFood(index));
                 },
                 child: Container(
                   margin: EdgeInsets.only(left: Dimensions.width10,right: Dimensions.width10,bottom: Dimensions.height20),
@@ -214,6 +216,7 @@ Widget _buildPageItem(int index, ProductModel popularProduct) {
     transform: matrix,
     child: Stack(
       children: [
+        //a clickable image to link to another page
         GestureDetector(
           onTap: () {
             // navigate to another page in GETX we use Get.to()
