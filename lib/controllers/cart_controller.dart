@@ -34,6 +34,7 @@ class CartController extends GetxController {
             quantity:value.quantity! + quantity,
             isExist:true,
             time:DateTime.now().toString(),
+            product: product,
         );
       });
 
@@ -55,12 +56,14 @@ class CartController extends GetxController {
             quantity:quantity,
             isExist:true,
             time:DateTime.now().toString(),
+            product: product,
           );
       });}else{
         Get.snackbar("There is an error", "You have to add something so you can save to Cart");
       }
       
     }
+    update();
 
   }
   

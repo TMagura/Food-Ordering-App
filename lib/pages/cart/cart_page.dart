@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_oders/controllers/cart_controller.dart';
+import 'package:food_oders/routes/route_helper.dart';
 import 'package:food_oders/utils/app_contants.dart';
 import 'package:food_oders/utils/dimensions.dart';
 import 'package:food_oders/widgets/app_icon.dart';
@@ -32,11 +33,16 @@ class CartPage extends StatelessWidget {
               ),
               SizedBox(width: Dimensions.width30*4,),
               //home icon
-              AppIcon(
-                icon: Icons.home_outlined,
-                iconColor: Colors.white,
-                backgroundColor: Colors.black38,
-                size: Dimensions.iconSize24*1.5,      
+              GestureDetector(
+                onTap: (){
+                  Get.toNamed(RouteHelper.getInitial());
+                },
+                child: AppIcon(
+                  icon: Icons.home_outlined,
+                  iconColor: Colors.white,
+                  backgroundColor: Colors.black38,
+                  size: Dimensions.iconSize24*1.5,      
+                ),
               ),
               //cart icon
               AppIcon(
@@ -60,8 +66,9 @@ class CartPage extends StatelessWidget {
                 context: context,
                 removeTop: true,
                 child: GetBuilder<CartController>(builder: (cartController){
+                  var _cartList = cartController.getItems; 
                   return  ListView.builder(
-                    itemCount: cartController.getItems.length,
+                    itemCount: _cartList.length,
                     itemBuilder: (_,index){
                      return Container(
                 
@@ -114,16 +121,18 @@ class CartPage extends StatelessWidget {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        // popularProduct.setQuantity(false);
+                                        // substract button
+                                        cartController.addItem(_cartList[index].product!, -1);
                                       },
                                       child: Icon(Icons.remove, color: Colors.black26,),
                                       ),
                                     SizedBox(width: (Dimensions.width10),),
-                                    BigText(text:"0"),// popularProduct.inCartItems.toString()),
+                                    BigText(text:_cartList[index].quantity!.toString()),
                                     SizedBox(width: (Dimensions.width10),),
                                     GestureDetector(
                                       onTap: (){
-                                        // popularProduct.setQuantity(true);
+                                        // add button
+                                        cartController.addItem(_cartList[index].product!, 1);
                                       },
                                       child: Icon(Icons.add, color: Colors.black26,),
                                       ),
