@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_oders/controllers/cart_controller.dart';
+import 'package:food_oders/controllers/popular_product_controller.dart';
+import 'package:food_oders/controllers/recommended_product_controller.dart';
 import 'package:food_oders/routes/route_helper.dart';
 import 'package:food_oders/utils/app_contants.dart';
 import 'package:food_oders/utils/dimensions.dart';
@@ -78,15 +80,33 @@ class CartPage extends StatelessWidget {
                       child: Row(
                         children: [
                           //image container
-                          Container(
-                            width: Dimensions.height20*5,
-                            height: Dimensions.height20*5,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(AppConstants.BASE_URL+AppConstants.UPLOAD_URL+cartController.getItems[index].img!),
-                                fit: BoxFit.cover),
-                              borderRadius: BorderRadius.circular(Dimensions.radius20),
-                              color: Colors.blueAccent,
+                          GestureDetector(
+                            onTap: () {
+                              //check where this product comes from either recommended ot popular and navigate to it
+                              var popularIndex = Get.find<PopularProductController>()
+                              .popularProductList
+                              .indexOf(_cartList[index].product!);
+                              if(popularIndex>=0){
+                                Get.toNamed(RouteHelper.getPopularFood(popularIndex, "cartpage" ));
+                              }else{
+                               var recommendedIndex = Get.find<RecommendedProductController>()
+                              .recommendedProductList
+                              .indexOf(_cartList[index].product!);
+                              //we pass parameters to be used wen we get to the page
+                              Get.toNamed(RouteHelper.getRecommendedFood(recommendedIndex, "cartpage" ));  
+                              }
+
+                            },
+                            child: Container(
+                              width: Dimensions.height20*5,
+                              height: Dimensions.height20*5,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(AppConstants.BASE_URL+AppConstants.UPLOAD_URL+cartController.getItems[index].img!),
+                                  fit: BoxFit.cover),
+                                borderRadius: BorderRadius.circular(Dimensions.radius20),
+                                color: Colors.blueAccent,
+                              ),
                             ),
                           ),
                            SizedBox(width: Dimensions.width10,),
@@ -155,6 +175,74 @@ class CartPage extends StatelessWidget {
            ),
         ],
       ),
+    //bootomNavigator
+       bottomNavigationBar:GetBuilder<CartController>(builder: (cartProduct) {
+        return  Container(
+        height: Dimensions.bottomHeightBar,
+        padding: EdgeInsets.only(
+          top: Dimensions.height20,
+          bottom: Dimensions.height20,
+          left: Dimensions.width20,
+          right: Dimensions.width20,
+          ),
+          decoration: BoxDecoration( 
+            color: Colors.purple[50],
+            borderRadius: BorderRadius.only( 
+              topLeft: Radius.circular(Dimensions.radius20),
+              topRight: Radius.circular(Dimensions.radius20),
+            ),
+          ),
+          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+
+              Container(
+                padding: EdgeInsets.only(
+                  top: Dimensions.height20,
+                  bottom: Dimensions.height20,
+                  right: Dimensions.width10,
+                  left: Dimensions.width10,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(Dimensions.radius20),
+                ) ,
+                // this is the left counter
+               child: Row(
+                children: [
+                  SizedBox(width: (Dimensions.width10),),
+                  BigText(text: "\$ ${cartProduct.totalAmount.toString()}"),
+                  SizedBox(width: (Dimensions.width10),),
+                ],
+               ),
+              ),
+              //botomNavigationBar for Cart
+            GestureDetector(
+              onTap: () {
+              cartProduct.addToHistory();
+              },
+             child: Container(
+                padding: EdgeInsets.only(
+                  top: Dimensions.height20,
+                  bottom: Dimensions.height20,
+                  right: Dimensions.width20/4,
+                  left: Dimensions.width20/4,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.green[200],
+                  borderRadius: BorderRadius.circular(Dimensions.radius20),
+                ) ,
+                
+                  child: BigText(text: "Check Out",color: Colors.black87,),
+                  
+              ),
+              ),
+            ],
+          ),
+      );
+      },)
+
+
+    
     );
   }
 }

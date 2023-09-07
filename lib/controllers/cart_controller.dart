@@ -6,6 +6,7 @@ import 'package:food_oders/models/products_model.dart';
 import 'package:get/get.dart';
 
 import 'package:food_oders/data/repository/cart_repo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CartController extends GetxController {
   final CartRepo cartRepo;
@@ -16,6 +17,8 @@ class CartController extends GetxController {
    //create a Map which uses the CartModel to process data
   Map<int,CartModel> _items = {};
   Map<int,CartModel> get items => _items;
+  //this list will save Sharedpreference data 
+  List<CartModel> storageItems= [];
 
   //this function will be called in the popularproduct controller
   void  addItem(ProductModel product,int quantity){
@@ -63,6 +66,7 @@ class CartController extends GetxController {
       }
       
     }
+    cartRepo.addToCartList(getItems);
     update();
 
   }
@@ -104,5 +108,44 @@ class CartController extends GetxController {
        return e.value;
     }).toList();
    }
+  
+  //a function to get total Amount of all in Cart
+  int get totalAmount{
+    var total =0;
+    _items.forEach((key, value) {
+      total += value.quantity! * value.price!;
+    });
+    return total;
+  }
+   
+   //a function to getCartData from local storage
+   List<CartModel> getcartData(){
+    setCart = cartRepo.getCartList();
+    return storageItems;
+   }
+  
+   // create a set method to initialise the storageList 
+   set setCart(List<CartModel> items){
+    storageItems = items;
+    print("length is "+storageItems.length.toString());
+    for (int i = 0; i < storageItems.length; i++) {
+      _items.putIfAbsent(storageItems[i].product!.id!, () => storageItems[i]);
+    }
+   }
+   // a function to save data in CART_HISTORY_LIST
+   void addToHistory(){
+    cartRepo.addToCartHistoryList();
+    clear();
+   }
+   //After we checkout we want to clear the data on the cart page
+   void clear(){
+    _items={};
+    update();
+   }
+   
+   //output the history information based on time of checkOut
+   List<CartModel> getCartHistoryList(){
+    return cartRepo.getCartHistorylist();   }
+
 
 }

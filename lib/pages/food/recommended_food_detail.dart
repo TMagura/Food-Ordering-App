@@ -4,23 +4,25 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
 import 'package:food_oders/controllers/cart_controller.dart';
 import 'package:food_oders/controllers/popular_product_controller.dart';
 import 'package:food_oders/controllers/recommended_product_controller.dart';
-import 'package:food_oders/utils/app_contants.dart';
-import 'package:get/get.dart';
-
 import 'package:food_oders/routes/route_helper.dart';
+import 'package:food_oders/utils/app_contants.dart';
 import 'package:food_oders/utils/dimensions.dart';
 import 'package:food_oders/widgets/app_icon.dart';
 import 'package:food_oders/widgets/big_text.dart';
 import 'package:food_oders/widgets/expandable_text_widget.dart';
 
 class RecommendedFoodDetail extends StatelessWidget {
-  int pageID;
+  final int pageID;
+  final String page;
   RecommendedFoodDetail({
     Key? key,
     required this.pageID,
+    required this.page,
   }) : super(key: key);
 
   @override
@@ -43,9 +45,13 @@ class RecommendedFoodDetail extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                  onTap: () {
+              onTap: () {
+                  if(page == "cartpage" ){
+                  Get.toNamed(RouteHelper.getCartPage());
+                  }else{
                     Get.toNamed(RouteHelper.getInitial());
-                  },
+                  }
+                 },
                   child: AppIcon(icon: Icons.clear, iconColor: Colors.black,),
                   ),
                 // AppIcon(icon: Icons.shopping_cart_checkout_outlined, iconColor: Colors.black),

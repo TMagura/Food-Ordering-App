@@ -118,7 +118,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
             itemBuilder: ((context, index) {
               return GestureDetector(
                 onTap: (){
-                  Get.toNamed(RouteHelper.getRecommendedFood(index));
+                  Get.toNamed(RouteHelper.getRecommendedFood(index , "cartpage"));
                 },
                 child: Container(
                   margin: EdgeInsets.only(left: Dimensions.width10,right: Dimensions.width10,bottom: Dimensions.height20),
@@ -220,7 +220,7 @@ Widget _buildPageItem(int index, ProductModel popularProduct) {
         GestureDetector(
           onTap: () {
             // navigate to another page in GETX we use Get.to()
-            Get.toNamed(RouteHelper.getPopularFood(index));
+            Get.toNamed(RouteHelper.getPopularFood(index,"home"));
           },
           child: Container( 
             height: Dimensions.pageViewContainer,

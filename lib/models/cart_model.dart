@@ -24,6 +24,7 @@ class CartModel {
     this.product,
   });
 
+    //needed to convert json data from string  to object (encodable) 
   CartModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
@@ -35,4 +36,22 @@ class CartModel {
     time = json['time'];
     product = ProductModel.fromJson(json['product']);
   }
+
+  //create an EnCodable data by using the toJson so that you will be able to change from object to string list
+    Map<String, dynamic> toJson(){
+     return {
+        "id":this.id,
+        "name":this.name,
+        "price":this.price,
+        "stars":this.stars,
+        "img":this.img,
+        "quantity":this.quantity,
+        "isExist":this.isExist,
+        "time":this.time,
+        "product":this.product!.toJson(),
+     };
+    }
+
+
+
 }
