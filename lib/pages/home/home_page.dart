@@ -2,6 +2,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food_oders/pages/acoount/account_page.dart';
+import 'package:food_oders/pages/auth/sign_up_page.dart';
 import 'package:food_oders/pages/cart/cart_history.dart';
 import 'package:food_oders/pages/home/main_food_page.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -19,9 +21,9 @@ class _HomePageState extends State<HomePage> {
    int _selectedIndex = 0;
       List pages=[
         MainFoodPage(),
-        Container(child:Center(child: Text("page 3"),),),
+        SignUpPage(),
         CartHistory(),
-        Container(child:Center(child: Text("page 4"),),),
+        AccountPage()
       ];
 
       //create a function that will be tapped and gives the index
@@ -59,12 +61,12 @@ class _HomePageState extends State<HomePage> {
             ),
           //list item 2 
           BottomNavigationBarItem(
-            label: 'History',
+            label: 'Cart',
             icon: Icon(Icons.archive),
             ),
             //list item 3
             BottomNavigationBarItem(
-            label: 'Cart',
+            label: 'History',
             icon: Icon(Icons.shopping_cart_rounded),
             ),
             //list item 4

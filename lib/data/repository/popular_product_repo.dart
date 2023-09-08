@@ -2,7 +2,7 @@ import 'package:food_oders/data/api/api_client.dart';
 import 'package:food_oders/utils/app_contants.dart';
 import 'package:get/get.dart';
 
-//if we load data from the internet we expend the class with GetxService
+//if we load data from the internet we extend the class with GetxService
 class PopularProductRepo extends GetxService{
   final ApiClient apiClient;
 

@@ -9,7 +9,7 @@ class ApiClient extends GetConnect implements GetxService{
   baseUrl =appBaseUrl;
   timeout = Duration(seconds: 30);
   token =AppConstants.TOKEN;
-  //headers are used to know the requests needed and their types eg json type,Chaset and have unique Tokens
+  //headers are used to tell the server what type are you sending eg json type,Chaset and have unique Tokens
   _mainHeaders = {
     'Content-type':'application/json; charset= UTF-8',
     'Authorization':'Bearer $token'  //used for authentication with Bearer type 
@@ -26,5 +26,27 @@ class ApiClient extends GetConnect implements GetxService{
      return Response(statusCode: 1, statusText: e.toString());
    }
   }
+
+    //update the headers
+  void updateHeader(String token){
+    _mainHeaders = {
+    'Content-type':'application/json; charset= UTF-8',
+    'Authorization':'Bearer $token'  //used for authentication with Bearer type 
+  };
+  }
+
+  //we are sending data /posting it to server
+   Future<Response> postData(String uri,dynamic body) async {
+    try {
+     Response response = await post(uri, body, headers: _mainHeaders);
+     return response;
+    } catch (e) {
+      print(e.toString());
+     return Response(statusCode: 1,statusText: e.toString());
+    }
+   }
+  
+
+
 
 }

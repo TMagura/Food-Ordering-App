@@ -45,7 +45,7 @@ class RecommendedFoodDetail extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-              onTap: () {
+                onTap: () {
                   if(page == "cartpage" ){
                   Get.toNamed(RouteHelper.getCartPage());
                   }else{

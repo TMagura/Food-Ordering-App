@@ -21,6 +21,11 @@ class CartRepo {
  //a method that will add string objects to a shared preference which only accept Strings
  void addToCartList(List<CartModel> cartList){
   cart=[];
+  /*
+  //to remove everythin in History cart
+  sharedPreferences.remove(AppConstants.CART_LIST);
+  sharedPreferences.remove(AppConstants.CART_HISTORY_LIST);
+  */
   var time = DateTime.now().toString();
   cartList.forEach((element) {
     element.time = time;
@@ -50,7 +55,7 @@ class CartRepo {
   return cartList; 
  }
 
-    //check is the data is stored successfully in the shared pref fot cartHistory
+    //check is the data is stored successfully in the shared pref for cartHistory
     List<CartModel> getCartHistorylist(){
       if(sharedPreferences.containsKey(AppConstants.CART_HISTORY_LIST)){
         cartHistory=[];

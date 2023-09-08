@@ -146,6 +146,22 @@ class CartController extends GetxController {
    //output the history information based on time of checkOut
    List<CartModel> getCartHistoryList(){
     return cartRepo.getCartHistorylist();   }
+   
+   //this sets the map creating data from the cartHistory back to the cart Page
+   set setItems(Map<int,CartModel> setItems){
+    _items ={};
+    _items = setItems;
+   }
+    
+    //after we get items from history we need to show them on cartpage again 
+    void addTocartList(){
+      cartRepo.addToCartList(getItems);
+      update();
+    }
+
+
+
+
 
 
 }

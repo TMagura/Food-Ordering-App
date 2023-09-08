@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:food_oders/controllers/cart_controller.dart';
 import 'package:food_oders/controllers/popular_product_controller.dart';
 import 'package:food_oders/controllers/recommended_product_controller.dart';
+import 'package:food_oders/pages/auth/sign_in_page.dart';
+import 'package:food_oders/pages/auth/sign_up_page.dart';
 import 'package:food_oders/routes/route_helper.dart';
 import 'package:get/get.dart';
 import 'package:food_oders/helper/dependencies.dart' as MyDependencies; 
@@ -30,8 +32,9 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-            initialRoute: RouteHelper.getSplashScreen(),
-            getPages: RouteHelper.routes,
+          home: SignInPage(),
+            // initialRoute: RouteHelper.getSplashScreen(),
+            // getPages: RouteHelper.routes,
         );
       });
    });

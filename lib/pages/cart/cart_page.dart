@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_oders/base/no_data_page.dart';
 import 'package:food_oders/controllers/cart_controller.dart';
 import 'package:food_oders/controllers/popular_product_controller.dart';
 import 'package:food_oders/controllers/recommended_product_controller.dart';
@@ -30,7 +31,7 @@ class CartPage extends StatelessWidget {
               AppIcon(
                 icon: Icons.arrow_back,
                 iconColor: Colors.white,
-                backgroundColor: Colors.black38,
+                backgroundColor: Colors.red,
                 size: Dimensions.iconSize24*1.5,      
               ),
               SizedBox(width: Dimensions.width30*4,),
@@ -42,7 +43,7 @@ class CartPage extends StatelessWidget {
                 child: AppIcon(
                   icon: Icons.home_outlined,
                   iconColor: Colors.white,
-                  backgroundColor: Colors.black38,
+                  backgroundColor: Colors.red,
                   size: Dimensions.iconSize24*1.5,      
                 ),
               ),
@@ -50,20 +51,22 @@ class CartPage extends StatelessWidget {
               AppIcon(
                 icon: Icons.shopping_cart,
                 iconColor: Colors.white,
-                backgroundColor: Colors.black38,
+                backgroundColor: Colors.red,
                 size: Dimensions.iconSize24*1.5,      
               ),
             ],
           ),
           ),
           //listview of items
-          Positioned(
+          GetBuilder<CartController>(builder: (_cartController){
+            return _cartController.getItems.length>0
+            ?  Positioned(
             top: Dimensions.height20*5,
             left: Dimensions.width20,
             right: Dimensions.width20,
             bottom: 0,
             child: Container(
-              color: Colors.black12,
+              color: Colors.white,
               child: MediaQuery.removePadding(
                 context: context,
                 removeTop: true,
@@ -92,8 +95,17 @@ class CartPage extends StatelessWidget {
                                var recommendedIndex = Get.find<RecommendedProductController>()
                               .recommendedProductList
                               .indexOf(_cartList[index].product!);
-                              //we pass parameters to be used wen we get to the page
-                              Get.toNamed(RouteHelper.getRecommendedFood(recommendedIndex, "cartpage" ));  
+                              if(recommendedIndex<0){
+                               Get.snackbar("History Error",
+                               "cant access history products",
+                               backgroundColor: Colors.orangeAccent,
+                               colorText:Colors.white);
+                              }else{
+                                //we pass parameters to be used wen we get to the page
+                                Get.toNamed(RouteHelper.getRecommendedFood(recommendedIndex, "cartpage" )); 
+                              }
+
+                               
                               }
 
                             },
@@ -133,7 +145,7 @@ class CartPage extends StatelessWidget {
                                     left: Dimensions.width10,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: Colors.green[100],
                                     borderRadius: BorderRadius.circular(Dimensions.radius20),
                                   ) ,
                                   // this is the left counter
@@ -172,7 +184,9 @@ class CartPage extends StatelessWidget {
                 ),
               ),
             ),
-           ),
+           )
+            : NoDataPage(text: "The cart is empty Please add something");
+          }),
         ],
       ),
     //bootomNavigator
@@ -186,13 +200,15 @@ class CartPage extends StatelessWidget {
           right: Dimensions.width20,
           ),
           decoration: BoxDecoration( 
-            color: Colors.purple[50],
+            color: Colors.red[50],
             borderRadius: BorderRadius.only( 
               topLeft: Radius.circular(Dimensions.radius20),
               topRight: Radius.circular(Dimensions.radius20),
             ),
           ),
-          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: cartProduct.getItems.length > 0
+        ?  Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
 
               Container(
@@ -237,7 +253,9 @@ class CartPage extends StatelessWidget {
               ),
               ),
             ],
-          ),
+          )
+        : Container()
+
       );
       },)
 
