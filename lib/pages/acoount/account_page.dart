@@ -1,20 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:food_oders/base/custom_loader.dart';
+import 'package:food_oders/controllers/auth_controller.dart';
+import 'package:food_oders/controllers/cart_controller.dart';
+import 'package:food_oders/controllers/user_controller.dart';
+import 'package:food_oders/routes/route_helper.dart';
 import 'package:food_oders/utils/dimensions.dart';
 import 'package:food_oders/widgets/account_widget.dart';
 import 'package:food_oders/widgets/app_icon.dart';
 import 'package:food_oders/widgets/big_text.dart';
+import 'package:get/get.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    bool _userLoggedIn = Get.find<AuthController>().userLoggedIn();
+    if(!_userLoggedIn){
+      Get.find<UserController>().getUserInfo();
+      print("user is logged in");
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[200],
         title: Center(child: BigText(text: "Profile", size: Dimensions.fonts20,)),
       ),
-      body: Container(
+      body: GetBuilder<UserController>(builder: (userController){
+        return _userLoggedIn ?
+          // userController.isLoading
+      // ?
+       Container(
         // height: , 
         width: double.maxFinite,
         margin: EdgeInsets.only(top: Dimensions.height20),
@@ -59,7 +74,7 @@ class AccountPage extends StatelessWidget {
                    iconSize: Dimensions.iconSize24,
                    size: Dimensions.height45,
                    ),
-                   bigText: BigText(text: "Trymore@gmail.com", size: Dimensions.fonts20,),
+                   bigText: BigText(text: "email", size: Dimensions.fonts20,),
                    ),
                    SizedBox(height: Dimensions.height20,),
                    //address icon 
@@ -82,6 +97,26 @@ class AccountPage extends StatelessWidget {
                    bigText: BigText(text: "Trymore messages ", size: Dimensions.fonts20,),
                    ),
                    SizedBox(height: Dimensions.height20,),
+                    //logOut icon
+                   GestureDetector(
+                    onTap:() {
+                      if(!Get.find<AuthController>().userLoggedIn()){
+                      Get.find<AuthController>().clearSharedData();
+                      Get.find<CartController>().clear();
+                      Get.find<CartController>().clearCartHistory();
+                      Get.toNamed(RouteHelper.getSignInPage());
+                      } 
+                    },
+                     child: AccountWidget(appIcon: AppIcon(icon: Icons.logout,
+                     backgroundColor:Color.fromARGB(255, 170, 70, 3)!,
+                     iconColor: Colors.white,
+                     iconSize: Dimensions.iconSize24,
+                     size: Dimensions.height45,
+                     ),
+                     bigText: BigText(text: "logOut", size: Dimensions.fonts20,),
+                     ),
+                   ),
+                   SizedBox(height: Dimensions.height20,),
                    
                     ],
                   ),
@@ -89,7 +124,12 @@ class AccountPage extends StatelessWidget {
               ),
             ],
         ),
-      ),
+      
+      // : CustomLoader()
+        )
+      : Container(child: Center(child: Text("you are not logged in"),),);
+
+      })
     );
   }
 }

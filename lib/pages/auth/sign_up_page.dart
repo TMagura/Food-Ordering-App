@@ -2,9 +2,11 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:food_oders/base/custom_loader.dart';
 import 'package:food_oders/base/show_custom_message.dart';
 import 'package:food_oders/controllers/auth_controller.dart';
 import 'package:food_oders/models/signup_body_model.dart';
+import 'package:food_oders/routes/route_helper.dart';
 import 'package:food_oders/utils/dimensions.dart';
 import 'package:food_oders/widgets/app_text_field.dart';
 import 'package:food_oders/widgets/big_text.dart';
@@ -28,9 +30,9 @@ class SignUpPage extends StatelessWidget {
       "google.png",
       
     ];
-    var authController = Get.find<AuthController>();
+    
       //create a method for validation
-   void _registration(){
+   void _registration(AuthController authController){
     String name = usernameController.text.trim();
     String phone = phoneController.text.trim();
     String email = emailController.text.trim();
@@ -53,15 +55,15 @@ class SignUpPage extends StatelessWidget {
      SignUpBody signUpBody = SignUpBody(name: name, phone: phone, email: email, password: password);
     authController.registration(signUpBody).then((status) {
       if(status.isSuccess){
-        showCustomSnackBar("Registered Successfully", title: "Success Message");
+        showCustomSnackBar("Registered Successfully", title: "SignUp Message");
+        Get.toNamed(RouteHelper.getInitial());
       }else{
-        showCustomSnackBar(status.message, title: "Success Message");
+        showCustomSnackBar(status.message, title: "SignUp Message");
+        Get.toNamed(RouteHelper.getInitial());
       }
     },);
 
     }
-
-
 
    }
 
@@ -69,10 +71,12 @@ class SignUpPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       //to avoid rendering of overflow use singlechildScrollView
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          children: [
+      body: GetBuilder<AuthController>(builder: (_authController){
+        return !_authController.isLoading 
+       ?   SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+           children: [
             SizedBox(height: Dimensions.screenHeight*0.01,),
             //circle avatar widget
             Container(
@@ -94,6 +98,7 @@ class SignUpPage extends StatelessWidget {
              //text field for password
           AppTextField(textEditingController: passwordController,
              hintText: 'Password',
+             isObscure: true,
              icon: Icons.password_sharp,
              ), 
               SizedBox(height: Dimensions.height20,),
@@ -112,7 +117,7 @@ class SignUpPage extends StatelessWidget {
              //signup  buttons
              GestureDetector( 
               onTap: () {
-                _registration();
+                _registration(_authController);
               },
                child: Container(
                 width: Dimensions.screenWidth/2,
@@ -163,7 +168,11 @@ class SignUpPage extends StatelessWidget {
              )
           ],
         ),
-      ),
+      )
+      : CustomLoader();
+       
+     
+      })
     );
       
 

@@ -2,7 +2,11 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:food_oders/base/custom_loader.dart';
+import 'package:food_oders/base/show_custom_message.dart';
+import 'package:food_oders/controllers/auth_controller.dart';
 import 'package:food_oders/pages/auth/sign_up_page.dart';
+import 'package:food_oders/routes/route_helper.dart';
 import 'package:food_oders/utils/dimensions.dart';
 import 'package:food_oders/widgets/app_text_field.dart';
 import 'package:food_oders/widgets/big_text.dart';
@@ -16,14 +20,44 @@ class SignInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var emailController = TextEditingController();
     var passwordController = TextEditingController();
-    var usernameController = TextEditingController();
-    var phoneController = TextEditingController();
     
+      //Create a logIn function with validation
+    void _login(AuthController authController){
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+
+    if(email.isEmpty){
+      showCustomSnackBar("email can't be Empty", title: "Email Error");
+    }else if(!GetUtils.isEmail(email)){
+     showCustomSnackBar("Email is Invalid", title: "Email  Error");
+    }else if(password.isEmpty){
+     showCustomSnackBar("Password can't be Empty", title: "Password Error");
+    }else if(password.length<6){
+     showCustomSnackBar("Password is too short it must be more than 6 character", title: "Password Error");
+    }else{
+     
+    authController.login(email,password).then((status) {
+      if(status.isSuccess){
+        showCustomSnackBar("Registered Successfully", title: "Success Message");
+        // here since i dont have database for users in using backdoor
+        Get.toNamed(RouteHelper.getCartPage());
+      }else{
+        showCustomSnackBar(status.message, title: "Success Message");
+        // here since i dont have database for users in using backdoor
+        Get.toNamed(RouteHelper.getCartPage());
+      }
+    },);
+
+    }
+
+   }
 
     return Scaffold(
       backgroundColor: Colors.white,
       //to avoid rendering of overflow use singlechildScrollView
-      body: SingleChildScrollView(
+      body: GetBuilder<AuthController>(builder: (authController){
+     return !authController.isLoading 
+     ? SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Column(
           children: [
@@ -76,6 +110,7 @@ class SignInPage extends StatelessWidget {
              //text field for password
           AppTextField(textEditingController: passwordController,
              hintText: 'Password',
+             isObscure: true,
              icon: Icons.password_sharp,
              ), 
          
@@ -96,14 +131,19 @@ class SignInPage extends StatelessWidget {
             ),
              SizedBox(height: Dimensions.height20,),
              //Sign In  button
-             Container(
-              width: Dimensions.screenWidth/2,
-              height: Dimensions.screenHeight/15,
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 71, 133, 119),
-                borderRadius: BorderRadius.circular(Dimensions.radius20),
-              ),
-              child: Center(child: BigText(text: "Sign In", color: Colors.white,)),
+             GestureDetector(
+              onTap:() {
+                _login(authController);
+              },
+               child: Container(
+                width: Dimensions.screenWidth/2,
+                height: Dimensions.screenHeight/15,
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 71, 133, 119),
+                  borderRadius: BorderRadius.circular(Dimensions.radius20),
+                ),
+                child: Center(child: BigText(text: "Sign In", color: Colors.white,)),
+               ),
              ),
               SizedBox(height: Dimensions.height45*1.5,),
 
@@ -130,8 +170,12 @@ class SignInPage extends StatelessWidget {
              ),
              SizedBox(height: Dimensions.height15,),
           ],
-        ),
-      ),
+         ),
+        )
+       : CustomLoader();
+
+      })
     );
+
   }
 }

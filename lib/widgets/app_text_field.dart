@@ -7,11 +7,13 @@ class AppTextField extends StatelessWidget {
   final TextEditingController textEditingController;
   final String hintText;
   final IconData icon;
+  final bool  isObscure;
   const AppTextField({
     Key? key,
     required this.textEditingController,
     required this.hintText,
     required this.icon,
+    this.isObscure = false,
   }) : super(key: key);
 
   @override
@@ -32,6 +34,7 @@ class AppTextField extends StatelessWidget {
               ],
             ),
           child: TextField(
+             obscureText: isObscure ? true : false,
               controller: textEditingController,
               decoration: InputDecoration(
                 hintText: hintText, 

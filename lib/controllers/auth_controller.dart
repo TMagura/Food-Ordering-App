@@ -20,8 +20,10 @@ final AuthRepo authRepo;
  bool _isLoading = false;
  bool get isLoading => _isLoading;
 
+  //function register from repo
   Future<ResponseModel> registration(SignUpBody signUpBody)async{
   _isLoading = true;
+  update();
   Response response = await authRepo.registration(signUpBody);
   late ResponseModel responseModel;
   if (response.statusCode == 200) {
@@ -30,10 +32,52 @@ final AuthRepo authRepo;
   }else{
     responseModel = ResponseModel(false, response.statusText!);
   }
-  _isLoading=true;
+  _isLoading=false;
   update();
   return responseModel;
  }
+
+
+ //function login from repo and we also need to save the token because if maybe you logged out before
+  Future<ResponseModel> login(String email,String password)async{
+    print("getting token ");
+    print(authRepo.getUserToken().toString());
+  _isLoading = true;
+  update();
+  Response response = await authRepo.login(email,password);
+  late ResponseModel responseModel;
+  if (response.statusCode == 200) {
+    print("we have token from backend");
+    authRepo.saveUserToken(response.body["token"]);//we get the token in the response body
+    responseModel = ResponseModel(true, response.body["token"]);
+  }else{
+    responseModel = ResponseModel(false, response.statusText!);
+  }
+  _isLoading=false;
+  update();
+  return responseModel;
+ }
+
+
+//Save the user email and password to shared pref this function is from repo
+ void saveUserNumberAndPassword ( String number , String password){
+  authRepo.saveUserNumberAndPassword(number, password);
+}
+
+  //user token to check if user is logged in for checkout from repo
+ bool userLoggedIn(){
+  return authRepo.userLoggedIn();
+  }
+
+
+/// clearing data for logOut
+ bool clearSharedData(){
+  return authRepo.clearSharedData();
+ }
+
+
+
+
 
 
 

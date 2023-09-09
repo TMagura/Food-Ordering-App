@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_oders/pages/acoount/account_page.dart';
+import 'package:food_oders/pages/auth/sign_in_page.dart';
 import 'package:food_oders/pages/auth/sign_up_page.dart';
 import 'package:food_oders/pages/cart/cart_history.dart';
 import 'package:food_oders/pages/home/main_food_page.dart';
@@ -21,7 +22,7 @@ class _HomePageState extends State<HomePage> {
    int _selectedIndex = 0;
       List pages=[
         MainFoodPage(),
-        SignUpPage(),
+        Container(child: Center(child: Text("page history page")),),
         CartHistory(),
         AccountPage()
       ];

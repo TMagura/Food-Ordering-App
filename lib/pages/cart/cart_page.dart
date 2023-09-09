@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:food_oders/base/no_data_page.dart';
+import 'package:food_oders/controllers/auth_controller.dart';
 import 'package:food_oders/controllers/cart_controller.dart';
 import 'package:food_oders/controllers/popular_product_controller.dart';
 import 'package:food_oders/controllers/recommended_product_controller.dart';
+import 'package:food_oders/pages/auth/sign_in_page.dart';
 import 'package:food_oders/routes/route_helper.dart';
 import 'package:food_oders/utils/app_contants.dart';
 import 'package:food_oders/utils/dimensions.dart';
@@ -234,7 +236,14 @@ class CartPage extends StatelessWidget {
               //botomNavigationBar for Cart
             GestureDetector(
               onTap: () {
-              cartProduct.addToHistory();
+                //before we checkOut check user if is Logged in we make use of the token check
+                //here we hv no database so bypass
+               if(!Get.find<AuthController>().userLoggedIn()){
+                cartProduct.addToHistory();
+               }else{
+                Get.toNamed(RouteHelper.getSignInPage());
+               }
+              
               },
              child: Container(
                 padding: EdgeInsets.only(

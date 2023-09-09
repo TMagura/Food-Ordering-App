@@ -158,7 +158,12 @@ class CartController extends GetxController {
       cartRepo.addToCartList(getItems);
       update();
     }
-
+   
+   //clear cart history wen user logs out
+   void clearCartHistory(){
+    cartRepo.clearCartHistoty();
+    update();
+   }
 
 
 

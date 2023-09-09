@@ -32,9 +32,9 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home: SignInPage(),
-            // initialRoute: RouteHelper.getSplashScreen(),
-            // getPages: RouteHelper.routes,
+          // home: SignInPage(),
+            initialRoute: RouteHelper.getSplashScreen(),
+            getPages: RouteHelper.routes,
         );
       });
    });

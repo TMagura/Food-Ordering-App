@@ -63,6 +63,8 @@ class ProductModel {
       this.updatedAt,
       this.typeId});
 
+
+   //we can also use a factory constructor here but its jus the came thing 
   ProductModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
