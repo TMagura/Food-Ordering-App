@@ -1,3 +1,4 @@
+import 'package:food_oders/pages/address/add_address_page.dart';
 import 'package:food_oders/pages/auth/sign_in_page.dart';
 import 'package:food_oders/pages/cart/cart_page.dart';
 import 'package:food_oders/pages/food/popular_food_details.dart';
@@ -15,6 +16,7 @@ class RouteHelper{
   static const String recommendedFood = "/recommended-food";
   static const String cartPage = "/cartPage";
   static const String signIn = "/sign-in";
+  static const String addAddress = "/add-address";
 
   //i can use a function so that later i can use parameters this is STEP 2
   static String getSplashScreen()=>'$splashScreen';
@@ -23,6 +25,7 @@ class RouteHelper{
   static String getRecommendedFood(int pageID, String page)=>'$recommendedFood?pageID=$pageID&page=$page';
   static String getCartPage()=>'$cartPage';
   static String getSignInPage()=>'$signIn';
+  static String getAddressRoute()=>'$addAddress';
 
 //GetMaterialApp makes the use of the a list of pages called GetPage
 //Create pages with the name relation so that it get picked in main page STEP 3
@@ -51,7 +54,14 @@ class RouteHelper{
 
     GetPage(name: signIn, page: () {
      return SignInPage();
+   }, transition: Transition.fadeIn),
+
+    GetPage(name: addAddress, page: () {
+     return AddAddressPage();
    }, transition: Transition.fadeIn)
+
+
+
  ];
 
 }

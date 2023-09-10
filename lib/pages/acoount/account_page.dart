@@ -26,7 +26,7 @@ class AccountPage extends StatelessWidget {
         title: Center(child: BigText(text: "Profile", size: Dimensions.fonts20,)),
       ),
       body: GetBuilder<UserController>(builder: (userController){
-        return _userLoggedIn ?
+        return !_userLoggedIn ?
           // userController.isLoading
       // ?
        Container(
